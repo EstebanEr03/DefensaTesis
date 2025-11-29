@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Definición de la Necesidad</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .slide {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid #667eea;
+        }
+        
+        .slide-number {
+            background: #667eea;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .slide-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2d3748;
+            text-transform: uppercase;
+        }
+        
+        .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .content-box {
+            background: #f7fafc;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .content-box h3 {
+            color: #667eea;
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slide-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2d3748;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+
+        .action-btn:hover { transform: translateY(-2px); }
+
+        .info-panel {
+            display: none;
+            background: #ffffff;
+            border: 1px solid #e6fffa;
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 18px;
+        }
+
+        .info-panel.visible { display: block; }
+
+        .semaforo-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; margin-right: 10px; vertical-align: middle; }
+
+        /* Demo interactive styles */
+        .demo-controls { display:flex; gap:10px; align-items:center; margin-top:12px; }
+        .filter-btn { background:#fff; border:1px solid #e2e8f0; padding:6px 10px; border-radius:8px; cursor:pointer; }
+        .filter-btn.active { background:#667eea; color:white; border-color:#667eea; }
+
+        .demo-table { width:100%; border-collapse:collapse; margin-top:14px; }
+        .demo-table th, .demo-table td { text-align:left; padding:12px; border-bottom:1px solid #edf2f7; }
+        .state-chip { display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; font-weight:600; }
+        .chip-red { background:#fff5f5; color:#c53030; border:1px solid #fed7d7; }
+        .chip-yellow { background:#fffbeb; color:#b7791f; border:1px solid #fef3c7; }
+        .chip-green { background:#ecfdf5; color:#15803d; border:1px solid #bbf7d0; }
+
+        .details-panel { margin-top:14px; background:#ffffff; border:1px solid #e6f7ff; padding:14px; border-radius:10px; display:none; }
+        .details-panel.visible { display:block; }
+
+        
+        .stat {
+            background: #764ba2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 0 5px;
+        }
+        
+        ul {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        li {
+            padding: 15px 0;
+            font-size: 18px;
+            color: #4a5568;
+            line-height: 1.6;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        li:last-child {
+            border-bottom: none;
+        }
+        
+        li:before {
+            content: "▸";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 22px;
+        }
+        
+        .highlight {
+            background: #fef5e7;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #f39c12;
+            margin-top: 20px;
+        }
+        
+        .highlight p {
+            font-size: 18px;
+            color: #2d3748;
+            line-height: 1.7;
+        }
+        
+        .badge {
+            background: #48bb78;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 20px;
+            }
+            
+            .slide-title {
+                font-size: 24px;
+            }
+            
+            .content-box h3 {
+                font-size: 20px;
+            }
+            
+            li {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SLIDE 0: PORTADA -->
+        <div class="slide" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%), url('data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Cpattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"%3E%3Ccircle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.1)"/%3E%3C/pattern%3E%3Crect width="100" height="100" fill="url(%23grid)"/%3E%3C/svg%3E'); background-size: cover; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 500px; text-align: center; position: relative; overflow: hidden;">
+            
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.04); z-index: 0; pointer-events: none;"></div>
+
+            <div style="position: relative; z-index: 2; color: white; max-width: 900px;">
+                <h1 style="font-size: 48px; font-weight: bold; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.15); line-height: 1.2;">
+                    Sistema web responsive para seguimiento y control de activos tecnológicos de una Universidad
+                </h1>
+                
+                <div style="background: rgba(220, 38, 38, 0.9); display: inline-block; padding: 15px 30px; border-radius: 8px; margin-top: 20px;">
+                    <p style="font-size: 18px; font-weight: bold; margin: 0;">ESTEBAN ENRIQUEZ E ISAAC CERDA</p>
+                </div>
+            </div>
+            
+            <div style="position: absolute; bottom: 20px; right: 20px; width: 80px; height: 80px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.12);">
+                💻
+            </div>
+        </div>
+        
+        <!-- SLIDE 2: CONTENIDOS -->
+        <div class="slide">
+                <div class="slide-header">
+                    <div class="slide-number">📋</div>
+                    <div class="slide-title">Agenda</div>
+                </div>
+
+                <div style="display: grid; gap: 16px; margin-top: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 18px; border-radius: 12px; display: flex; align-items: center; gap: 12px; color: white;">
+                        <div style="font-size: 28px; font-weight: bold; background: white; color: #667eea; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+                        <div style="font-size: 18px; font-weight: 600;">Necesidades encontradas</div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); padding: 18px; border-radius: 12px; display: flex; align-items: center; gap: 12px; color: white;">
+                        <div style="font-size: 28px; font-weight: bold; background: white; color: #48bb78; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+                        <div style="font-size: 18px; font-weight: 600;">Objetivo del proyecto</div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%); padding: 18px; border-radius: 12px; display: flex; align-items: center; gap: 12px; color: white;">
+                        <div style="font-size: 28px; font-weight: bold; background: white; color: #f6ad55; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+                        <div style="font-size: 18px; font-weight: 600;">Alcance</div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #fc8181 0%, #f56565 100%); padding: 18px; border-radius: 12px; display: flex; align-items: center; gap: 12px; color: white;">
+                        <div style="font-size: 28px; font-weight: bold; background: white; color: #fc8181; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
+                        <div style="font-size: 18px; font-weight: 600;">Restricciones</div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%); padding: 18px; border-radius: 12px; display: flex; align-items: center; gap: 12px; color: white;">
+                        <div style="font-size: 28px; font-weight: bold; background: white; color: #9f7aea; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">5</div>
+                        <div style="font-size: 18px; font-weight: 600;">Arquitectura tecnológica</div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%); padding: 18px; border-radius: 12px; display: flex; align-items: center; gap: 12px; color: white;">
+                        <div style="font-size: 28px; font-weight: bold; background: white; color: #16a34a; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">6</div>
+                        <div style="font-size: 18px; font-weight: 600;">Detalle de módulos / Demo</div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%); padding: 18px; border-radius: 12px; display: flex; align-items: center; gap: 12px; color: white;">
+                        <div style="font-size: 28px; font-weight: bold; background: white; color: #3b82f6; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">7</div>
+                        <div style="font-size: 18px; font-weight: 600;">Qué está hecho / Qué falta</div>
+                    </div>
+                </div>
+        </div>
+        
+        <!-- SLIDE 1: SITUACIÓN ACTUAL, PROBLEMAS Y NECESIDADES -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-number">1</div>
+                <div class="slide-title">◆ DEFINICIÓN DE LA NECESIDAD ◆</div>
+            </div>
+            
+            <!-- Grid de dos columnas para Situación y Problemas -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <!-- Situación Actual -->
+                <div style="background: #ffffff; border: 2px solid #4a5568; border-radius: 12px; overflow: hidden;">
+                    <div style="background: #5a6c7d; padding: 15px; display: flex; align-items: center; gap: 12px;">
+                        <div style="background: #667eea; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                            📌
+                        </div>
+                        <h3 style="color: white; font-size: 20px; margin: 0; font-weight: bold; text-transform: uppercase;">Situación Actual</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <ul style="margin: 0; padding: 0; list-style: none;">
+                            <li style="padding: 12px 15px; margin-bottom: 10px; background: #f7fafc; border-left: 4px solid #667eea; border-radius: 6px; font-size: 16px; color: #2d3748;">
+                                <span style="background: #667eea; color: white; padding: 4px 10px; border-radius: 6px; font-weight: bold; margin-right: 8px;">+10.572</span> activos gestionados manualmente
+                            </li>
+                            <li style="padding: 12px 15px; margin-bottom: 10px; background: #f7fafc; border-left: 4px solid #667eea; border-radius: 6px; font-size: 16px; color: #2d3748;">
+                                Datos dispersos en <span style="background: #667eea; color: white; padding: 4px 10px; border-radius: 6px; font-weight: bold;">+4</span> hojas y documentos físicos
+                            </li>
+                            <li style="padding: 12px 15px; background: #f7fafc; border-left: 4px solid #667eea; border-radius: 6px; font-size: 16px; color: #2d3748;">
+                                Procesos lentos y con riesgo de errores
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Problemas Identificados -->
+                <div style="background: #1a202c; border: 2px solid #2d3748; border-radius: 12px; overflow: hidden;">
+                    <div style="background: #2d3748; padding: 15px; display: flex; align-items: center; gap: 12px;">
+                        <div style="background: #667eea; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                            📌
+                        </div>
+                        <h3 style="color: white; font-size: 20px; margin: 0; font-weight: bold; text-transform: uppercase;">Problemas Identificados</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <ul style="margin: 0; padding: 0; list-style: none;">
+                            <li style="padding: 12px 15px; margin-bottom: 10px; background: #2d3748; border-left: 4px solid #667eea; border-radius: 6px; font-size: 16px; color: #e2e8f0;">
+                                Baja trazabilidad y control
+                            </li>
+                            <li style="padding: 12px 15px; margin-bottom: 10px; background: #2d3748; border-left: 4px solid #667eea; border-radius: 6px; font-size: 16px; color: #e2e8f0;">
+                                SLA altos (<span style="background: #667eea; color: white; padding: 4px 10px; border-radius: 6px; font-weight: bold;">74 h</span> en devoluciones)
+                            </li>
+                            <li style="padding: 12px 15px; background: #2d3748; border-left: 4px solid #667eea; border-radius: 6px; font-size: 16px; color: #e2e8f0;">
+                                Dificultad para auditar y decidir
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Necesidad Institucional - Ancho completo -->
+            <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); border: 2px solid #cbd5e0; border-radius: 12px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); padding: 18px; display: flex; align-items: center; gap: 12px;">
+                    <div style="background: #667eea; width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px;">
+                        📌
+                    </div>
+                    <h3 style="color: #1e293b; font-size: 22px; margin: 0; font-weight: bold; text-transform: uppercase;">Necesidad Institucional</h3>
+                </div>
+                <div style="padding: 20px 30px;">
+                    <ul style="margin: 0; padding: 0; list-style: none;">
+                        <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #667eea; border-radius: 6px; font-size: 16px; color: #2d3748;">
+                            Sistema web centralizado
+                        </li>
+                        <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #667eea; border-radius: 6px; font-size: 16px; color: #2d3748;">
+                            Integración con <span style="background: #3b82f6; color: white; padding: 3px 8px; border-radius: 5px; font-weight: bold;">SAP</span> y <span style="background: #10b981; color: white; padding: 3px 8px; border-radius: 5px; font-weight: bold;">SysAid</span>
+                        </li>
+                        <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #667eea; border-radius: 6px; font-size: 16px; color: #2d3748;">
+                            Trazabilidad en tiempo real
+                        </li>
+                        <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #667eea; border-radius: 6px; font-size: 16px; color: #2d3748;">
+                            Mantenimiento mantenimiento
+                        </li>
+                        <li style="padding: 10px 15px; background: white; border-left: 4px solid #667eea; border-radius: 6px; font-size: 16px; color: #2d3748;">
+                            Dashboards para decisiones estratégicas
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 2: OBJETIVO GENERAL -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-number">2</div>
+                <div class="slide-title">🎯 Objetivo General</div>
+            </div>
+            
+            <div class="content-box">
+                <h3>🎯 Objetivo General</h3>
+                <ul>
+                    <li>Centralizar el seguimiento y control de activos tecnológicos</li>
+                    <li>Mejorar la trazabilidad operativa en tiempo real</li>
+                    <li>Facilitar la gestión de mantenimiento y el ciclo de vida</li>
+                    <li>Reducir la dependencia de procesos manuales y documentos dispersos</li>
+                </ul>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                <div style="background: #f7fafc; padding: 25px; border-radius: 15px; text-align: center; border: 2px solid #e2e8f0;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">🔧</div>
+                    <h4 style="color: #667eea; font-size: 18px; margin-bottom: 10px; text-transform: uppercase;">Automatización</h4>
+                    <p style="color: #718096; font-size: 14px; margin-bottom: 10px;">Reducir en un 90% la dependencia de procesos manuales mediante automatización</p>
+                </div>
+                
+                <div style="background: #f7fafc; padding: 25px; border-radius: 15px; text-align: center; border: 2px solid #e2e8f0;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">📊</div>
+                    <h4 style="color: #667eea; font-size: 18px; margin-bottom: 10px; text-transform: uppercase;">Trazabilidad</h4>
+                    <p style="color: #718096; font-size: 14px; margin-bottom: 10px;">Mejorar la trazabilidad operativa en al menos un 80% con seguimiento en tiempo real</p>
+                </div>
+                
+                <div style="background: #f7fafc; padding: 25px; border-radius: 15px; text-align: center; border: 2px solid #e2e8f0;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">⚡</div>
+                    <h4 style="color: #667eea; font-size: 18px; margin-bottom: 10px; text-transform: uppercase;">Optimización</h4>
+                    <p style="color: #718096; font-size: 14px; margin-bottom: 10px;">Reducir SLA promedio de devolución en un 40% en tres meses tras implementación</p>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 12px; text-align: center; color: white;">
+                    <div style="font-size: 42px; font-weight: bold; margin-bottom: 5px;">10.572</div>
+                    <div style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Activos Tecnológicos</div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); padding: 25px; border-radius: 12px; text-align: center; color: white;">
+                    <div style="font-size: 42px; font-weight: bold; margin-bottom: 5px;">80%</div>
+                    <div style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Mejora Trazabilidad</div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%); padding: 25px; border-radius: 12px; text-align: center; color: white;">
+                    <div style="font-size: 42px; font-weight: bold; margin-bottom: 5px;">90%</div>
+                    <div style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Reducción Manual</div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #fc8181 0%, #f56565 100%); padding: 25px; border-radius: 12px; text-align: center; color: white;">
+                    <div style="font-size: 42px; font-weight: bold; margin-bottom: 5px;">40%</div>
+                    <div style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Reducción SLA</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 3: ALCANCE Y RESTRICCIONES -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-number">3</div>
+                <div class="slide-title">Alcance y Restricciones</div>
+            </div>
+
+            <!-- Botón para ver diagrama de casos de uso -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button onclick="showUseCaseDiagram()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); transition: transform 0.2s;">
+                    📊 Ver Diagrama de Casos de Uso
+                </button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <!-- Columna Izquierda: Alcance -->
+                <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 2px solid #6ee7b7; border-radius: 12px; overflow: hidden;">
+                    <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 18px; text-align: center;">
+                        <h3 style="color: white; font-size: 22px; margin: 0; font-weight: bold; text-transform: uppercase;">✅ Alcance</h3>
+                    </div>
+                    <div style="padding: 25px;">
+                        <ul style="margin: 0; padding: 0; list-style: none;">
+                            <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #10b981; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                Levantamiento estructurado
+                            </li>
+                            <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #10b981; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                Almacenamiento en <strong style="background: #10b981; color: white; padding: 2px 8px; border-radius: 4px;">SQLServer</strong>
+                            </li>
+                            <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #10b981; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                <a href="https://dev.azure.com/estebanenriquez/Proyecto%20Soporte%20Activos/_dashboards/dashboard/ace49d75-8e05-4710-bbaa-7c28ebd31e5f" target="_blank" style="color: #1e293b; text-decoration: none; border-bottom: 2px solid #10b981; transition: all 0.2s;">Desarrollo ágil por sprints (Scrum)</a>
+                            </li>
+                            <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #10b981; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                Módulos: ciclo de vida, movimientos, mantenimientos y dashboards
+                            </li>
+                            <li style="padding: 10px 15px; background: white; border-left: 4px solid #10b981; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                Sistema web responsive operativo
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Restricciones -->
+                <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #fbbf24; border-radius: 12px; overflow: hidden;">
+                    <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 18px; text-align: center;">
+                        <h3 style="color: white; font-size: 22px; margin: 0; font-weight: bold; text-transform: uppercase;">⚠️ Restricciones / Supuestos</h3>
+                    </div>
+                    <div style="padding: 25px;">
+                        <ul style="margin: 0; padding: 0; list-style: none;">
+                            <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #f59e0b; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                Tecnología <strong style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 4px;">.NET 8</strong> exclusivamente para el back 
+                            </li>
+                            <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #f59e0b; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                Base de datos <strong style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 4px;">SQLServer</strong>
+                            </li>
+                            <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #f59e0b; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                Autenticación <strong style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 4px;">SSO (Entra ID)</strong>
+                            </li>
+                            <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #f59e0b; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                Acceso solo desde intranet o VPN
+                            </li>
+                            <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #f59e0b; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                Sin app móvil nativa (solo web responsive)
+                            </li>
+                            <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #f59e0b; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                SAP: exportación manual (sin sincronización)
+                            </li>
+                            <li style="padding: 10px 15px; margin-bottom: 8px; background: white; border-left: 4px solid #f59e0b; border-radius: 6px; font-size: 15px; color: #1e293b;">
+                                SysAid: <strong style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 4px;">solo lectura</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: ARQUITECTURA TECNOLÓGICA -->
+        <div class="slide" style="padding: 30px;">
+            <div class="slide-header">
+                <div class="slide-number">4</div>
+                <div class="slide-title">🏗️ Arquitectura Tecnológica</div>
+            </div>
+
+            <!-- Botón alternativo para abrir en nueva pestaña -->
+            <div style="text-align: center; margin-bottom: 15px;">
+                <a href="https://s.icepanel.io/bDyZ5qTFo3IZPK/lAUG" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); transition: transform 0.2s;">
+                    🔗 Abrir Diagrama C4 en nueva pestaña
+                </a>
+            </div>
+
+            <div style="width: 100%; height: 75vh; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.15); border: 3px solid #9f7aea;">
+                <iframe src="https://s.icepanel.io/bDyZ5qTFo3IZPK/lAUG" style="width:100%; height:100%; border:none;" allowfullscreen></iframe>
+            </div>
+            
+            <div style="margin-top: 15px; text-align: center;">
+                <p style="color: #718096; font-size: 14px; font-style: italic;">
+                    💡 Diagrama C4 interactivo - Puedes hacer zoom y navegar por los diferentes niveles de la arquitectura
+                </p>
+                <p style="color: #718096; font-size: 13px; margin-top: 10px;">
+                    Si el diagrama no carga, <a href="c4.png" target="_blank" style="color: #667eea; font-weight: bold; text-decoration: underline;">haz clic aquí para ver la imagen estática</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: CRONOGRAMA / DELIVERY PLAN -->
+        <div class="slide" style="padding: 30px;">
+            <div class="slide-header">
+                <div class="slide-number">5</div>
+                <div class="slide-title">📅 Cronograma del Proyecto</div>
+            </div>
+
+            <!-- Botón para abrir en nueva pestaña -->
+            <div style="text-align: center; margin-bottom: 15px;">
+                <a href="https://dev.azure.com/estebanenriquez/Proyecto%20Soporte%20Activos/_deliveryplans/plan/095b2083-3a90-49aa-b59c-83dd7171be0a" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); transition: transform 0.2s;">
+                    🔗 Ver Cronograma Completo en Azure DevOps
+                </a>
+            </div>
+
+            <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
+                <img src="avances.png" alt="Cronograma del Proyecto" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); border: 3px solid #9f7aea;">
+            </div>
+            
+            <div style="margin-top: 15px; text-align: center;">
+                <p style="color: #718096; font-size: 14px; font-style: italic;">
+                    📊 Estado actual del proyecto - Para ver el cronograma interactivo completo, haz clic en el botón superior
+                </p>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: COMPARACIÓN -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-number">6</div>
+                <div class="slide-title">🔄 Comparación</div>
+            </div>
+            
+                <div class="slide-actions">
+                    <button class="action-btn" onclick="showModal('semaforo-panel')">Mostrar Semáforo</button>
+                    <button class="action-btn" onclick="showModal('users-panel')">Comparar Módulo Usuarios (Entra ID)</button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+                <!-- COLUMNA IZQUIERDA: SITUACIÓN ANTERIOR -->
+                <div>
+                    <div style="background: linear-gradient(135deg, #fc8181 0%, #f56565 100%); padding: 20px; border-radius: 12px 12px 0 0; text-align: center;">
+                        <h3 style="color: white; font-size: 20px; margin: 0; font-weight: bold;">SITUACIÓN ANTERIOR (MANUAL)</h3>
+                    </div>
+                    <div style="background: #fff5f5; padding: 25px; border-radius: 0 0 12px 12px; border: 2px solid #fc8181;">
+                        
+                        <div style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #e53e3e;">
+                            <h4 style="color: #e53e3e; font-size: 16px; margin-bottom: 8px; font-weight: bold;">Centralización de Datos</h4>
+                            <p style="color: #4a5568; font-size: 14px; margin: 0; line-height: 1.6;">Fragmentada: Información dispersa en al menos 54 hojas de cálculo independientes, correos y 3BT, sin consolidación.</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #e53e3e;">
+                            <h4 style="color: #e53e3e; font-size: 16px; margin-bottom: 8px; font-weight: bold;">Gestión de Documentos</h4>
+                            <p style="color: #4a5568; font-size: 14px; margin: 0; line-height: 1.6;">Manual y Dispersa: Generación manual de PDFs, firma física y validación manual vía por usar correo local. Alto riesgo de error humano.</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #e53e3e;">
+                            <h4 style="color: #e53e3e; font-size: 16px; margin-bottom: 8px; font-weight: bold;">Trazabilidad</h4>
+                            <p style="color: #4a5568; font-size: 14px; margin: 0; line-height: 1.6;">Baja o Limitada: Historial de eventos sobre específica (asignación/entrega) incompleto o disperso. El historial de un activo BOLA de información de 131 horas por validaciones manuales.</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #e53e3e;">
+                            <h4 style="color: #e53e3e; font-size: 16px; margin-bottom: 8px; font-weight: bold;">Mantenimiento</h4>
+                            <p style="color: #4a5568; font-size: 14px; margin: 0; line-height: 1.6;">Reactivo y Disdata: Solo se actúa cuando el equipo falla. El historial queda extraviado en correos electrónicos. No hay plan preventivo visible.</p>
+                        </div>
+                        
+                        <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #e53e3e;">
+                            <h4 style="color: #e53e3e; font-size: 16px; margin-bottom: 8px; font-weight: bold;">Eficiencia Operativa</h4>
+                            <p style="color: #4a5568; font-size: 14px; margin: 0; line-height: 1.6;">Baja: Alta carga operativa por dispersión de registros y validaciones (múltiples manuales, frustración para usuarios y demora importante).</p>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <!-- COLUMNA DERECHA: SOLUCIÓN PROPUESTA -->
+                <div>
+                    <div style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); padding: 20px; border-radius: 12px 12px 0 0; text-align: center;">
+                        <h3 style="color: white; font-size: 20px; margin: 0; font-weight: bold;">Arquitectura tecnológica</h3>
+                    </div>
+                    <div style="background: #f0fff4; padding: 25px; border-radius: 0 0 12px 12px; border: 2px solid #48bb78;">
+                        
+                        <div style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #38a169;">
+                            <h4 style="color: #38a169; font-size: 16px; margin-bottom: 8px; font-weight: bold;">Unificada</h4>
+                            <p style="color: #4a5568; font-size: 14px; margin: 0; line-height: 1.6;">Data/Warehouse: actúa como el único fuente de verdad: consolidando inventario reducir o modelos en una base de datos relacional integra.</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #38a169;">
+                            <h4 style="color: #38a169; font-size: 16px; margin-bottom: 8px; font-weight: bold;">Automatizada</h4>
+                            <p style="color: #4a5568; font-size: 14px; margin: 0; line-height: 1.6;">E-Template Service: genera todas plantillas en HTML/PDF basadas en datos reales (activos, usuarios, etc.), por lo que se firma usando simuladamente con en registros digital.</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #38a169;">
+                            <h4 style="color: #38a169; font-size: 16px; margin-bottom: 8px; font-weight: bold;">Total</h4>
+                            <p style="color: #4a5568; font-size: 14px; margin: 0; line-height: 1.6;">Movement Service: registra cada cambio de estado. Se incluye trazabilidad estructuradas y auditadas, relacionadas las "transacciones" de activos.</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #38a169;">
+                            <h4 style="color: #38a169; font-size: 16px; margin-bottom: 8px; font-weight: bold;">Proactivo y Documentado</h4>
+                            <p style="color: #4a5568; font-size: 14px; margin: 0; line-height: 1.6;">E-Maintenance Service: (Book Strategy) permite agendar, ejecutar, ordenadas fotográficas y tracking y más un historial técnico accesible para auditorías.</p>
+                        </div>
+                        
+                        <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #38a169;">
+                            <h4 style="color: #38a169; font-size: 16px; margin-bottom: 8px; font-weight: bold;">Alta</h4>
+                            <p style="color: #4a5568; font-size: 14px; margin: 0; line-height: 1.6;">Reducción drástica de tiempos administrativos: La validación de disponibilidad y código de activación tarda solo pocos/instantes.</p>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panels toggled by the action buttons -->
+            <div id="semaforo-panel" class="info-panel" aria-hidden="true">
+                <h4 style="margin:0 0 8px 0; color:#667eea;">Semáforo de Estados</h4>
+                <ul style="margin:8px 0 0 0; list-style:none; padding:0;">
+                    <li><span class="semaforo-dot" style="background:#e53e3e;"></span><strong>Rojos (Pendientes)</strong>: Movimientos que requieren exportación a SAP.</li>
+                    <li><span class="semaforo-dot" style="background:#f6ad55;"></span><strong>Amarillos (En Proceso)</strong>: Movimientos exportados, esperando confirmación SAP.</li>
+                    <li><span class="semaforo-dot" style="background:#48bb78;"></span><strong>Verdes (Completados)</strong>: Movimientos confirmados en SAP.</li>
+                    <li style="margin-top:8px;"><strong>Uso en la demo:</strong> Mostrar filtro por estado, y para cada estado evidenciar la trazabilidad y la marca de exportación a SAP.</li>
+                </ul>
+            </div>
+
+            <div id="users-panel" class="info-panel" aria-hidden="true">
+                <h4 style="margin:0 0 8px 0; color:#667eea;">Comparación: Módulo Usuarios</h4>
+                <ul style="margin:8px 0 0 0; list-style:none; padding:0;">
+                    <li><strong>Antes:</strong> Gestión de usuarios manual o con credenciales locales; auditoría limitada.</li>
+                    <li><strong>Ahora / Propuesta:</strong> Integración planificada con <em>Entra ID</em> para SSO y gestión centralizada de identidades.</li>
+                    <li><strong>Beneficio:</strong> Autenticación única, gestión de roles y permisos central, mejor auditoría y trazabilidad por usuario.</li>
+                    <li style="margin-top:8px;"><strong>Nota demo:</strong> Si Entra ID no está completamente integrado, mostrar la ruta planificada y ejemplo de cómo se mapearían usuarios y roles.</li>
+                </ul>
+            </div>
+
+
+            <div style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; text-align: center;">
+                <p style="color: white; font-size: 20px; font-weight: bold; margin: 0;">
+                    🎯 Transformación Digital: De Procesos Manuales Fragmentados a Sistema Centralizado
+                </p>
+            </div>
+        </div>
+
+        </div>
+    </div>
+
+    <script>
+        function togglePanel(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const isVisible = el.classList.contains('visible');
+            document.querySelectorAll('.info-panel').forEach(p => p.classList.remove('visible'));
+            if (!isVisible) {
+                el.classList.add('visible');
+                el.setAttribute('aria-hidden','false');
+                el.scrollIntoView({behavior:'smooth', block:'center'});
+            } else {
+                el.setAttribute('aria-hidden','true');
+            }
+        }
+
+        // Modal (pop-up) for presentation
+        function showModal(panelId){
+            const panel = document.getElementById(panelId);
+            if(!panel) return;
+            const modal = document.getElementById('pres-modal');
+            const body = modal.querySelector('.modal-body');
+            body.innerHTML = panel.innerHTML;
+            modal.style.display = 'flex';
+            modal.classList.add('visible');
+            modal.setAttribute('aria-hidden','false');
+        }
+
+        function hideModal(){
+            const modal = document.getElementById('pres-modal');
+            modal.classList.remove('visible');
+            modal.setAttribute('aria-hidden','true');
+            // hide after animation (immediate here)
+            modal.style.display = 'none';
+        }
+
+        // Función para mostrar el diagrama de casos de uso
+        function showUseCaseDiagram(){
+            const modal = document.getElementById('diagram-modal');
+            modal.style.display = 'flex';
+            modal.classList.add('visible');
+            modal.setAttribute('aria-hidden','false');
+        }
+
+        function hideDiagramModal(){
+            const modal = document.getElementById('diagram-modal');
+            modal.classList.remove('visible');
+            modal.setAttribute('aria-hidden','true');
+            modal.style.display = 'none';
+        }
+
+        // Función para mostrar el diagrama C4
+        function showC4Diagram(){
+            const modal = document.getElementById('c4-modal');
+            modal.style.display = 'flex';
+            modal.classList.add('visible');
+            modal.setAttribute('aria-hidden','false');
+        }
+
+        function hideC4Modal(){
+            const modal = document.getElementById('c4-modal');
+            modal.classList.remove('visible');
+            modal.setAttribute('aria-hidden','true');
+            modal.style.display = 'none';
+        }
+    </script>
+
+    <!-- Presentation modal -->
+    <div id="pres-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); align-items:center; justify-content:center; z-index:9999;">
+        <div style="background:white; width:90%; max-width:720px; border-radius:12px; padding:20px; position:relative;">
+            <button onclick="hideModal()" style="position:absolute; right:14px; top:14px; background:#eee; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;">Cerrar</button>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Diagram modal -->
+    <div id="diagram-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:9999;">
+        <div style="background:white; width:95%; max-width:1100px; border-radius:12px; padding:25px; position:relative; max-height:90vh; overflow:auto;">
+            <button onclick="hideDiagramModal()" style="position:absolute; right:14px; top:14px; background:#667eea; color:white; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:bold; z-index:10;">✕ Cerrar</button>
+            <h3 style="margin:0 0 20px 0; color:#667eea; font-size:24px; text-align:center;">📊 Diagrama de Casos de Uso</h3>
+            <div style="text-align:center;">
+                <img src="DiagramaCasosUso.png" alt="Diagrama de Casos de Uso" style="max-width:100%; height:auto; border-radius:8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            </div>
+        </div>
+    </div>
+
+    <!-- C4 Diagram modal -->
+    <div id="c4-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:9999;">
+        <div style="background:white; width:98%; max-width:1400px; height:90vh; border-radius:12px; padding:20px; position:relative; display:flex; flex-direction:column;">
+            <button onclick="hideC4Modal()" style="position:absolute; right:14px; top:14px; background:#9f7aea; color:white; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:bold; z-index:10;">✕ Cerrar</button>
+            <h3 style="margin:0 0 15px 0; color:#9f7aea; font-size:24px; text-align:center;">🏗️ Diagrama C4 - Arquitectura del Sistema</h3>
+            <div style="flex:1; border-radius:8px; overflow:hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                <iframe src="https://s.icepanel.io/bDyZ5qTFo3IZPK/lAUG" style="width:100%; height:100%; border:none; border-radius:8px;" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
